@@ -1,3 +1,7 @@
+import pygame as pg
+
+# game variables
+
 WIDTH = 800
 HEIGHT = 600
 TITLE = "First Game"
@@ -7,6 +11,7 @@ TILESIZE = 32
 # player values
 
 PLAYER_SPEED = 500
+PLAYER_HIT_RECT = pg.Rect(0, 0, TILESIZE, TILESIZE)
 
 # color values
 # colors are stored as tuples with RGB values
