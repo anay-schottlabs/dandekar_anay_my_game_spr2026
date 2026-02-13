@@ -49,8 +49,8 @@ class Game:
         # self.coin3 = Collectible(self, 2, 9)
         # self.wall1 = Wall(self, 10, 10)
 
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles):
+        for col, tiles in enumerate(self.map.data):
+            for row, tile in enumerate(tiles):
                 if tile == "1":
                     Wall(self, row, col)
                 elif tile == "P":

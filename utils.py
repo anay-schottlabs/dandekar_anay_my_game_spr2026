@@ -1,4 +1,5 @@
 import pygame as pg
+from settings import *
 
 class Map:
     def __init__(self, filename):
@@ -15,7 +16,6 @@ class Map:
         print(self.tilewidth)
         print(self.tileheight)
 
-        TILESIZE = 32
         self.width = self.tilewidth * TILESIZE
         self.height = self.tileheight * TILESIZE
 
