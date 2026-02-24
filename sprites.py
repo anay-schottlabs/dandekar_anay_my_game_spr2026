@@ -115,8 +115,7 @@ class Wall(Sprite):
         self.groups = game.all_sprites, game.walls
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.image = game.wall_image
         self.rect = self.image.get_rect()
         self.pos = vec(x, y) * TILESIZE
         self.rect.center = self.pos

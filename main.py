@@ -24,6 +24,10 @@ class Game:
         # accesses the file space that we're currently in
         # this can now access all files in the current directory
         self.game_dir = path.dirname(__file__)
+        self.img_dir = path.join(self.game_dir, "images")
+
+        # gets images
+        self.wall_image = pg.image.load(path.join(self.img_dir, "wall_art.png")).convert_alpha()
 
         # creates a map with the "level1.txt file"
         # that is found in the current directory
@@ -40,14 +44,6 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.collectibles = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-
-        # instantiating some different types of sprites
-        # self.player = Player(self, 15, 15)
-        # self.mob = Mob(self, 4, 4)
-        # self.coin1 = Collectible(self, 12, 5)
-        # self.coin2 = Collectible(self, 10, 3)
-        # self.coin3 = Collectible(self, 2, 9)
-        # self.wall1 = Wall(self, 10, 10)
 
         for col, tiles in enumerate(self.map.data):
             for row, tile in enumerate(tiles):
@@ -94,7 +90,7 @@ class Game:
         self.all_sprites.update()
 
     def draw(self):
-        self.screen.fill(BLUE)
+        self.screen.fill(BACKGROUND)
 
         # writes some text on the screen
         self.draw_text("Hello World", 24, WHITE, WIDTH/2, TILESIZE)

@@ -20,7 +20,7 @@ PLAYER_HIT_RECT = pg.Rect(0, 0, TILESIZE - PLAYER_HITBOX_CLEARANCE, TILESIZE - P
 
 # colors are stored as tuples with RGB values
 
-BLUE = (0, 0, 255)
+BACKGROUND = (91, 73, 113)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
