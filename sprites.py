@@ -129,8 +129,7 @@ class Collectible(Sprite):
         self.groups = game.all_sprites, game.collectibles
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(YELLOW)
+        self.image = game.coin_image
         self.rect = self.image.get_rect()
         self.pos = vec(x, y) * TILESIZE
         self.rect.center = self.pos

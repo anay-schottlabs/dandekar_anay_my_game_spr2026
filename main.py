@@ -28,6 +28,7 @@ class Game:
 
         # gets images
         self.wall_image = pg.image.load(path.join(self.img_dir, "wall_art.png")).convert_alpha()
+        self.coin_image = pg.image.load(path.join(self.img_dir, "coin_art.png")).convert_alpha()
 
         # creates a map with the "level1.txt file"
         # that is found in the current directory
