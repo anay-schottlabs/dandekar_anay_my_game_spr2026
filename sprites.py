@@ -1,6 +1,8 @@
 import pygame as pg
 from pygame.sprite import Sprite
 from settings import *
+from utils import *
+from os import path
 
 vec = pg.math.Vector2
 
@@ -53,6 +55,7 @@ class Player(Sprite):
         self.groups = game.all_sprites
         Sprite.__init__(self, self.groups)
         self.game = game
+        # self.spritesheet = Spritesheet(path.join(game.img_dir, "player_art.png"))
         self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
@@ -74,6 +77,22 @@ class Player(Sprite):
         # multiply by PLAYER_SPEED to make it move at the desired speed
         if self.vel.magnitude() != 0:
             self.vel = (self.vel / self.vel.magnitude()) * PLAYER_SPEED
+
+    # def load_images(self):
+    #     self.standing_frames = [
+    #         self.spritesheet.get_image(0, 0, TILESIZE, TILESIZE),
+    #         self.spritesheet.get_image(TILESIZE, 0, TILESIZE, TILESIZE)
+    #     ]
+
+    #     for frame in self.standing_frames:
+    #         frame.set_colorkey(BLACK)
+    
+    # def animate(self):
+    #     now = pg.time.get_ticks()
+    #     if not self.jumping and not self.walking:
+    #         if now - self.last_update < 350:
+    #             self.last_update = now
+    #             self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
 
     def update(self):
         # get WASD input
@@ -129,10 +148,32 @@ class Collectible(Sprite):
         self.groups = game.all_sprites, game.collectibles
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.coin_image
+        self.spritesheet = Spritesheet(path.join(game.img_dir, "coin_art.png"))
+        self.load_images()
+        self.image = self.spinning_frames[0]
+        self.current_frame = 0
+        self.last_update = pg.time.get_ticks()
         self.rect = self.image.get_rect()
         self.pos = vec(x, y) * TILESIZE
         self.rect.center = self.pos
     
+    def load_images(self):
+        self.spinning_frames = [
+            self.spritesheet.get_image(0, 0, TILESIZE, TILESIZE),
+            self.spritesheet.get_image(TILESIZE, 0, TILESIZE, TILESIZE),
+            self.spritesheet.get_image(0, TILESIZE, TILESIZE, TILESIZE),
+            self.spritesheet.get_image(TILESIZE, TILESIZE, TILESIZE, TILESIZE)
+        ]
+
+        for frame in self.spinning_frames:
+            frame.set_colorkey(BLACK)
+    
+    def animate(self):
+        now = pg.time.get_ticks()
+        if now - self.last_update > 600:
+            self.last_update = now
+            self.current_frame = (self.current_frame + 1) % len(self.spinning_frames)
+            self.image = self.spinning_frames[self.current_frame]
+    
     def update(self):
-        pass
+        self.animate()
