@@ -62,6 +62,13 @@ class Player(Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(x, y) * TILESIZE
         self.hit_rect = PLAYER_HIT_RECT
+        self.jumping = False
+        self.walking = False
+        self.frame_change_ticks = {
+            "standing": 350,
+            "jumping": 600,
+            "walking": 500
+        }
     
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -78,21 +85,48 @@ class Player(Sprite):
         if self.vel.magnitude() != 0:
             self.vel = (self.vel / self.vel.magnitude()) * PLAYER_SPEED
 
-    # def load_images(self):
-    #     self.standing_frames = [
-    #         self.spritesheet.get_image(0, 0, TILESIZE, TILESIZE),
-    #         self.spritesheet.get_image(TILESIZE, 0, TILESIZE, TILESIZE)
-    #     ]
+    def load_images(self):
+        self.standing_frames = [
+            # self.spritesheet.get_image(0, 0, TILESIZE, TILESIZE),
+            # self.spritesheet.get_image(TILESIZE, 0, TILESIZE, TILESIZE)
+        ]
 
-    #     for frame in self.standing_frames:
-    #         frame.set_colorkey(BLACK)
+        self.jumping_frames = [
+        ]
+
+        self.walking_frames = [
+        ]
+
+        self.all_animations = [
+            self.standing_frames,
+            self.jumping_frames,
+            self.walking_frames
+        ]
+
+        for frame in self.standing_frames:
+            frame.set_colorkey(BLACK)
+        
+        for animation in self.all_animations:
+            for frame in animation:
+                frame.set_colorkey(BLACK)
     
-    # def animate(self):
-    #     now = pg.time.get_ticks()
-    #     if not self.jumping and not self.walking:
-    #         if now - self.last_update < 350:
-    #             self.last_update = now
-    #             self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
+    def animate(self):
+        now = pg.time.get_ticks()
+        # standing animation
+        if not self.jumping and not self.walking:
+            if now - self.last_update < self.frame_change_ticks["standing"]:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
+        # jumping animation
+        elif self.jumping:
+            if now - self.last_update < self.frame_change_ticks["jumping"]:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.jumping)
+        # walking animation
+        elif self.walking:
+            if now - self.last_update < self.frame_change_ticks["walking"]:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.walking)
 
     def update(self):
         # get WASD input
@@ -153,26 +187,45 @@ class Collectible(Sprite):
         self.image = self.spinning_frames[0]
         self.current_frame = 0
         self.last_update = pg.time.get_ticks()
+        self.frame_change_ticks = 600
         self.rect = self.image.get_rect()
         self.pos = vec(x, y) * TILESIZE
         self.rect.center = self.pos
     
+    # gets images for the coin's animation
     def load_images(self):
+        # a list of all the frames in order
         self.spinning_frames = [
+            # the first frame starts from the top left
             self.spritesheet.get_image(0, 0, TILESIZE, TILESIZE),
+            # the second frame is the top right
             self.spritesheet.get_image(TILESIZE, 0, TILESIZE, TILESIZE),
+            # the third frame is on the bottom left
             self.spritesheet.get_image(0, TILESIZE, TILESIZE, TILESIZE),
+            # the fourth frame is on the bottom right
             self.spritesheet.get_image(TILESIZE, TILESIZE, TILESIZE, TILESIZE)
         ]
 
+        # any black pixels will be turned transparent
         for frame in self.spinning_frames:
             frame.set_colorkey(BLACK)
     
     def animate(self):
+        # get the current time
         now = pg.time.get_ticks()
-        if now - self.last_update > 600:
+        # check if it's been a certain amount of time
+        # this amount is specified in the constructor
+        # it determines how long until we move to the next animation frame
+        if now - self.last_update > self.frame_change_ticks:
+            # reset the time
             self.last_update = now
+            # use the next frame
+            # the % is the modulo operator, it does division and gets the remainder
+            # if the +1 is out of bounds, the math works out to return a zero
+            # this zero is the first index in the array and restarts the animation
+            # it lets everything loop smoothly
             self.current_frame = (self.current_frame + 1) % len(self.spinning_frames)
+            # set the current image of the sprite to the current animation frame
             self.image = self.spinning_frames[self.current_frame]
     
     def update(self):

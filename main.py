@@ -46,14 +46,19 @@ class Game:
         self.collectibles = pg.sprite.Group()
         self.walls = pg.sprite.Group()
 
+        # convert the text into different tiles
         for col, tiles in enumerate(self.map.data):
             for row, tile in enumerate(tiles):
+                # the character 1 means we place a wall
                 if tile == "1":
                     Wall(self, row, col)
+                # the character P means we place the player
                 elif tile == "P":
                     self.player = Player(self, row, col)
+                # the character C means we place a collectible
                 elif tile == "C":
                     Collectible(self, row, col)
+                # the character M means we place a mob
                 elif tile == "M":
                     Mob(self, row, col)
 
